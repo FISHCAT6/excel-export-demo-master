@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>大文件导出示例</title>
+</head>
+<body>
+<button id="exportButton">导出大文件</button>
+<script>
+    const exportButton = document.getElementById('exportButton');
+
+    exportButton.addEventListener('click', () => {
+        // 创建一个Web Worker
+        const worker = new Worker('exportWorker.js');
+
+        // 向Web Worker发送消息，告诉它开始处理导出任务
+        worker.postMessage({ action: 'startExport' });
+
+        // 监听Web Worker的响应消息
+        worker.addEventListener('message', (event) => {
+            if (event.data.action === 'exportComplete') {
+                // 导出完成后，处理导出文件
+                const fileData = event.data.fileData;
+
+                // 创建一个下载链接并触发下载
+                const blob = new Blob([fileData], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'largeFile.xlsx';
+                a.click();
+
+                // 释放资源
+                URL.revokeObjectURL(url);
+
+                // 终止Web Worker
+                worker.terminate();
+            }
+        });
+    });
+</script>
+</body>
+</html>
