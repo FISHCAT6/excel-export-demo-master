@@ -121,10 +121,8 @@ const SimpleDemo: React.FC<SimpleDemoProps> = () => {
         // 创建工作簿
         const formData = { columns, list }; // 只传递需要的数据
         const worker = new Worker('exportWorker.js');
-        console.log(8)
         // 向Web Worker发送消息，告诉它开始处理导出任务
         worker.postMessage({action: 'exportFormData',formData});
-        console.log(9)
         // 监听Web Worker的响应消息
         worker.addEventListener('message', (event) => {
             console.log(10)
@@ -170,18 +168,6 @@ const SimpleDemo: React.FC<SimpleDemoProps> = () => {
             <Table
                 rowKey='id'
                 rowSelection={rowSelection}
-                columns={columns}
-                dataSource={list}
-            />
-            <h3>展示表格</h3>
-            <Table
-                rowKey='id'
-                columns={columns}
-                dataSource={list}
-            />
-            <h3>展示表格</h3>
-            <Table
-                rowKey='id'
                 columns={columns}
                 dataSource={list}
             />
